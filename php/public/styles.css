@@ -1,23 +1,31 @@
 /* Custom styles for additional adjustments */
 body {
-    background-color: #f4f4f9;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
+    background-color: #f4f4f9 !important;
+    height: 100vh !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
 }
 
 .login-card {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background: #fff;
+    width: 100% !important;
+    max-width: 450px !important; /* Increased the max width */
+    padding: 25px !important;    /* Added more padding */
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+    background: #fff !important;
+}
+
+.login-card h1 {
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    white-space: nowrap !important; /* Prevents wrapping */
+    overflow: visible !important;   /* Ensures the text is fully visible */
 }
 
 .error {
-    color: red;
-    margin-bottom: 15px;
+    color: red !important;
+    margin-bottom: 15px !important;
 }
