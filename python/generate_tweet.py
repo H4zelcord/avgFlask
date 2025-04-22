@@ -12,7 +12,7 @@ except ImportError as e:
 def main():
     try:
         if len(sys.argv) < 3:
-            raise ValueError("Insufficient arguments provided. Usage: manual_tweet.py <theme> <adjective>")
+            raise ValueError("Insufficient arguments provided. Usage: generate_tweet.py <theme> <adjective>")
 
         theme = sys.argv[1]
         adjective = sys.argv[2]

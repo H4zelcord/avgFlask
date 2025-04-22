@@ -41,13 +41,22 @@ def generate_ai_tweet(co, theme, adjective):
     """
     Generate an AI tweet based on the given theme and adjective.
     """
-    prompt = f"Write ONLY a tweet that doesn't exceed 3 lines, the theme should be {theme} and related stuff to it, and you must write it in a {adjective} way, write it like a human would and don't mind much about typos or slangs."
+    prompt = (
+        f"Write ONLY a tweet that doesn't exceed 3 lines. "
+        f"The theme should be {theme} and related to it. "
+        f"Write it in a {adjective} way. "
+        f"DO NOT include hashtags, links, or mentions. "
+        f"Refrain from using any offensive or controversial language, unless it seems appropiate. "
+        f"Write it like a human would, and don't worry about typos or slang."
+    )
     response = co.generate(
         model='command-xlarge',
         prompt=prompt,
         max_tokens=50,
         temperature=0.7,
-        stop_sequences=["."]
+        stop_sequences=["."],
+        presence_penalty=0.5,
+        frequency_penalty=0.5
     )
     return response.generations[0].text.strip()
 
