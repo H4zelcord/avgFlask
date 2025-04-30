@@ -9,7 +9,7 @@ except ImportError as e:
     print(json.dumps(error_result))
     sys.exit(1)
 
-def main():
+def main(theme1, adjective1):
     try:
         if len(sys.argv) < 3:
             raise ValueError("Insufficient arguments provided. Usage: generate_tweet.py <theme> <adjective>")
@@ -17,6 +17,13 @@ def main():
         theme = sys.argv[1]
         adjective = sys.argv[2]
 
+
+        if theme1 is not None:
+            theme = theme1
+        if adjective1 is not None:
+            adjective = adjective1
+
+            
         # Create Cohere client
         co = create_cohere_client()
 

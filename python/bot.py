@@ -52,7 +52,7 @@ def generate_ai_tweet(co, theme, adjective):
     response = co.generate(
         model='command-xlarge',
         prompt=prompt,
-        max_tokens=50,
+        max_tokens=100,
         temperature=0.7,
         stop_sequences=["."],
         presence_penalty=0.5,
