@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $adjective = isset($_POST['adjective']) ? $_POST['adjective'] : null;
 
     if ($theme && $adjective) {
-        $script_path = "../../python/generate_tweet.py"; // Relative path
+        $script_path = "C:\\Users\\aleja\\Documents\\GitHub\\avgFlask\\python\\generate_tweet.py"; // Updated filename
         $command = escapeshellcmd("python \"$script_path\" \"$theme\" \"$adjective\"");
         $output = shell_exec($command);
 
         // Log the executed command and its output for debugging
-        printf("Command: $command");
-        printf("Output: $output");
+        error_log("Command: $command");
+        error_log("Output: $output");
 
         $result = json_decode($output, true);
 
@@ -44,14 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 /**
- * Handle tweet posting.
+ * Handle final tweet posting.
  * This block processes the form submission for confirming and posting the tweet.
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'post_tweet') {
     $tweet_content = isset($_POST['tweet_content']) ? $_POST['tweet_content'] : null;
 
     if ($tweet_content) {
-        $script_path = "../../python/post_tweet.py"; // Relative path
+        $script_path = "C:\\Users\\aleja\\Documents\\GitHub\\avgFlask\\python\\post_tweet.py";
         $command = escapeshellcmd("python \"$script_path\" \"$tweet_content\"");
         $output = shell_exec($command);
 
@@ -69,38 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     } else {
         $result = ["status" => "error", "message" => "Tweet content is required."];
-    }
-}
-
-/**
- * Handle scheduling tweets.
- * This block processes the form submission for scheduling tweets.
- */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'schedule_tweets') {
-    $theme = isset($_POST['theme']) ? $_POST['theme'] : null;
-    $interval = isset($_POST['interval']) ? $_POST['interval'] : null;
-
-    if ($theme && $interval) {
-        $script_path = "../../python/schedule_tweets.py"; // Relative path
-        $command = escapeshellcmd("python \"$script_path\" \"$theme\" \"$interval\"");
-        $output = shell_exec($command);
-
-        // Log the executed command and its output for debugging
-        printf("Command: $command");
-        printf("Output: $output");
-
-        $result = json_decode($output, true);
-
-        // Handle invalid JSON output
-        if ($result === null) {
-            error_log("Failed to decode JSON output from Python script.");
-            error_log("Raw Output: $output");
-            $result = ["status" => "error", "message" => "The operation was completed, but the response could not be parsed."];
-        } elseif ($result['status'] === 'success') {
-            $generated_tweet = $result['message'];
-        }
-    } else {
-        $result = ["status" => "error", "message" => "Both theme and interval are required."];
     }
 }
 
@@ -215,37 +183,12 @@ if (isset($result)) {
                     }
                 });
 
-                // JavaScript to handle modal
+                // Vanilla JavaScript to handle modal
                 function closeModal() {
                     document.getElementById('tweetModal').style.display = 'none';
                 }
             </script>
         <?php endif; ?>
-
-        <!-- New Card for Scheduled Tweets -->
-        <div class="card mt-4">
-            <div class="card-body">
-                <h5 class="card-title">Generate Random Scheduled Tweets</h5>
-                <?php if (isset($result) && $result['status'] === 'error' && isset($_POST['action']) && $_POST['action'] === 'schedule_tweets'): ?>
-                    <div class="alert alert-danger">
-                        <?php echo $result['message']; ?>
-                    </div>
-                <?php endif; ?>
-                <form method="POST" action="">
-                    <input type="hidden" name="action" value="schedule_tweets">
-                    <div class="mb-3">
-                        <label for="schedule_theme" class="form-label">Theme:</label>
-                        <input type="text" id="schedule_theme" name="theme" class="form-control" placeholder="Enter the theme (e.g., AI, sports)" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="interval" class="form-label">Interval (minutes):</label>
-                        <input type="number" id="interval" name="interval" class="form-control" placeholder="Enter interval in minutes" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Start Scheduling</button>
-                </form>
-            </div>
-        </div>
-        <!-- End of New Card -->
 
         <!-- Logout Button -->
         <div class="text-center mt-4">

@@ -11,11 +11,12 @@ except ImportError as e:
 
 def main(theme1, adjective1):
     try:
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3 and (theme1 is None or adjective1 is None):
             raise ValueError("Insufficient arguments provided. Usage: generate_tweet.py <theme> <adjective>")
 
-        theme = sys.argv[1]
-        adjective = sys.argv[2]
+        if theme1 is None and adjective1 is None:
+            theme = sys.argv[1]
+            adjective = sys.argv[2]
 
 
         if theme1 is not None:

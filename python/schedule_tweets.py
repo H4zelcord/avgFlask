@@ -1,17 +1,14 @@
 from bot import create_twitter_client, create_cohere_client, schedule_tweets
-from generate_tweet import main as generate_tweet
+import generate_tweet
+import post_tweet
 import time
 import sys
 import random
-import json
 
 def main():
 
-    if len(sys.argv) < 3:
-        raise ValueError("Insufficient arguments provided. Usage: schedule_tweets.py <theme> <time_interval_in_minutes>")
-
-    theme =             sys.argv[1]
-    interval_minutes =  int(sys.argv[2])
+    if len(sys.argv) >= 2:
+        raise ValueError("Too many arguments provided. Usage: schedule_tweets.py")
     
     """""
     client = create_twitter_client()
@@ -80,16 +77,27 @@ def main():
                             "Celebrity Podcast Boom", "Crowdfunded Film Projects"]
         
 
-    if theme == "anime" or theme == "politics" or theme == "sports" or theme == "technologies" or theme == "entertaintment":
-        theme = ""
 
-    if not theme:  # If no theme is provided
-        theme_list = random.choice([theme_anime, theme_politics, theme_sports, theme_technologies, theme_entertaintment])
-        new_theme = random.choice(theme_list)
-    else:  # If a theme is provided, use it only once
-        new_theme = theme
-        theme = ""  # Reset theme for subsequent iterations
 
+    theme = random.choice(["theme_anime", "theme_politics", "theme_sports", "theme_technologies", "theme_entertaintment"])
+
+
+    match theme:
+        case "theme_anime":
+            theme = random.choice(theme_anime)
+        case "theme_politics":
+            theme = random.choice(theme_politics)
+        case "theme_sports":
+            theme = random.choice(theme_sports)
+        case "theme_technologies":
+            theme = random.choice(theme_technologies)
+        case "theme_entertaintment":
+            theme = random.choice(theme_entertaintment)
+        case _:
+            raise ValueError("Invalid theme provided. Choose from: anime, politics, sports, technologies, entertainment")
+
+    print(f"Selected theme: {theme}")
+    
     adjective = ["humorous", "sarcastic", "satirical", "witty", "playful", "whimsical", 
                 "inspirational", "relatable", "casual", "upbeat", "reflective", "conversational", 
                 "lighthearted", "optimistic", "encouraging", "nostalgic", "cheeky", "thoughtful",
@@ -99,11 +107,17 @@ def main():
 
     random_adjective = random.choice(adjective)
 
-    generate_tweet(new_theme, random_adjective)
+    print(f"Selected adjective: {random_adjective}")
 
-    """time.sleep(interval_minutes * 60)  # Wait for the specified interval in minutes
+    prompt = generate_tweet.main(theme, random_adjective)
 
-    schedule_tweets(new_theme, interval_minutes)"""
-
+    """
+    post_tweet.main(prompt)
+    
+    time.sleep(interval_minutes * 60)  # Wait for the specified interval in minutes
+    
+    schedule_tweets(new_theme, interval_minutes)
+    
+    """
 if __name__ == "__main__":
     main()

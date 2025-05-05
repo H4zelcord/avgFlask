@@ -11,17 +11,3 @@ __pycache__/
 # Virtual environments
 venv/
 env/
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-
-# Compiled files
-*.so
-
-# PHP-specific files
-/vendor/
-
-# Node.js dependencies (if applicable)
-node_modules/
