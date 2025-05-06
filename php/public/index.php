@@ -128,13 +128,7 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
                 </div>
             </div>
         <?php endif; ?> 
-
-        <?php if (isset($result)): ?>
-            <div class="alert alert-info">
-                <?php echo htmlspecialchars($result['message']); ?>
-            </div>
-        <?php endif; ?>
-
+        
         <!-- Logout Button -->
         <div class="text-center mt-4">
             <a href="/avgFlask/php/public/logout.php" class="btn btn-danger">Logout</a>

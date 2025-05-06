@@ -1,6 +1,5 @@
-from bot import create_twitter_client, create_cohere_client, schedule_tweets
-import generate_tweet
-import post_tweet
+from python.bot import create_twitter_client, create_cohere_client, schedule_tweets
+from python.generate_tweet import main as generate_tweet
 import time
 import sys
 import random
@@ -109,7 +108,7 @@ def main():
 
     print(f"Selected adjective: {random_adjective}")
 
-    generate_tweet.main(theme, random_adjective)
+    generate_tweet(theme, random_adjective)
 
     """
     post_tweet.main(prompt)
