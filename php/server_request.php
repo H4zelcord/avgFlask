@@ -1,5 +1,16 @@
 <?php
 
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "avgflask";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 /**
  * Handle manual tweet generation.
  * This block processes the form submission for generating the AI tweet.
@@ -26,6 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $result = ["status" => "error", "message" => "The operation was completed, but the response could not be parsed."];
         } elseif ($result['status'] === 'success') {
             $generated_tweet = $result['message'];
+
+            // Insert into generated_tweets table
+            $stmt = $conn->prepare("INSERT INTO generated_tweets (prompt, value) VALUES (?, ?)");
+            $prompt = "Theme: $theme, Adjective: $adjective";
+            $stmt->bind_param("ss", $prompt, $generated_tweet);
+            $stmt->execute();
+            $stmt->close();
         }
     } else {
         $result = ["status" => "error", "message" => "Both theme and adjective are required."];
@@ -55,6 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             error_log("Failed to decode JSON output from Python script.");
             error_log("Raw Output: $output");
             $result = ["status" => "error", "message" => "The operation was completed, but the response could not be parsed."];
+        } elseif ($result['status'] === 'success') {
+            // Insert into posted_tweets table
+            $stmt = $conn->prepare("INSERT INTO posted_tweets (prompt, value) VALUES (?, ?)");
+            $prompt = "Posted Tweet";
+            $stmt->bind_param("ss", $prompt, $tweet_content);
+            $stmt->execute();
+            $stmt->close();
         }
     } else {
         $result = ["status" => "error", "message" => "Tweet content is required."];
@@ -62,8 +87,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 /**
- * Handle random tweet generation.
+ * Handle direct AI prompt.
+ * This block processes the form submission for directly prompting the AI.
  */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'direct_prompt') {
+    $ai_prompt = isset($_POST['ai_prompt']) ? $_POST['ai_prompt'] : null;
+
+    if ($ai_prompt) {
+        $script_path = "../../python/direct_tweet.py"; // Reuse the generate_tweet script
+        $command = escapeshellcmd("python \"$script_path\" \"$ai_prompt\"");
+        $output = shell_exec($command);
+
+        // Log the executed command and its output for debugging
+        error_log("Command: $command");
+        error_log("Output: $output");
+
+        $result = json_decode($output, true);
+
+        // Handle invalid JSON output
+        if ($result === null) {
+            error_log("Failed to decode JSON output from Python script.");
+            error_log("Raw Output: $output");
+            $result = ["status" => "error", "message" => "The operation was completed, but the response could not be parsed."];
+        } elseif ($result['status'] === 'success') {
+            $generated_tweet = $result['message'];
+
+            // Insert into generated_tweets table
+            $stmt = $conn->prepare("INSERT INTO generated_tweets (prompt, value) VALUES (?, ?)");
+            $stmt->bind_param("ss", $ai_prompt, $generated_tweet);
+            $stmt->execute();
+            $stmt->close();
+        }
+    } else {
+        $result = ["status" => "error", "message" => "AI prompt is required."];
+    }
+}
+
+// Close the database connection
+$conn->close();
+
+/*
+
+/**
+ * Handle random tweet generation.
+ 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'generate_random_tweet') {
     $interval = isset($_POST['interval']) ? intval($_POST['interval']) : null;
     $tweet_count = isset($_POST['tweet_count']) ? intval($_POST['tweet_count']) : null;
@@ -77,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 /**
  * Handle stopping the random tweet generation task.
- */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'stop_random_tweet') {
     $result = stopRandomTweetTask();
 }
@@ -86,4 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if (isset($result)) {
     error_log("Result: " . print_r($result, true));
 }
+
+*/
 ?>

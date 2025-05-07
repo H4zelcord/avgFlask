@@ -1,3 +1,4 @@
+/*
 function sendAjaxRequest(action, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '', true);
@@ -26,6 +27,7 @@ function stopRandomTweet() {
     });
 }
 
+*/
 function closeModal() {
     document.getElementById('tweetModal').style.display = 'none';
 }

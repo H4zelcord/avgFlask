@@ -42,8 +42,8 @@ def generate_ai_tweet(co, theme, adjective):
     Generate an AI tweet based on the given theme and adjective.
     """
     prompt = (
-        f"Write ONLY a tweet that doesn't exceed 3 lines. "
-        f"The theme should be {theme} and related to it. "
+        f"Answer ONLY a tweet that doesn't exceed 3 lines. "
+        f"The theme should be {theme} and stuff related to it. "
         f"Write it in a {adjective} way. "
         f"DO NOT include hashtags, links, or mentions. "
         f"Refrain from using any offensive or controversial language, unless it seems appropiate. "
@@ -60,6 +60,24 @@ def generate_ai_tweet(co, theme, adjective):
     )
     return response.generations[0].text.strip()
 
+def generate_direct_tweet(co, direct_prompt):
+    response = co.generate(
+        model='command-xlarge',
+        prompt=direct_prompt,
+        max_tokens=200,
+        temperature=0.7,
+        stop_sequences=["."],
+        presence_penalty=0.5,
+        frequency_penalty=0.5
+    )
+    return response.generations[0].text.strip()
+
+
+
+
+
+
+
 def post_tweet_v2(client, message):
     """
     Post a tweet using the Twitter API v2 with Tweepy's Client class.
@@ -69,14 +87,3 @@ def post_tweet_v2(client, message):
         return {"status": "success", "message": "Tweet posted successfully", "data": response.data}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-def schedule_tweets(client, co, theme, adjective, interval_minutes):
-    """
-    Automatically post tweets every `interval_minutes`.
-    """
-    while True:
-        tweet_content = generate_ai_tweet(co, theme, adjective)
-        result = post_tweet_v2(client, tweet_content)
-        print(result)  # Log the result
-        time.sleep(interval_minutes * 60)  # Wait for the specified interval
-

@@ -1,4 +1,5 @@
 <?php
+/*
 use parallel\Runtime;
 
 function startRandomTweetTask($interval, $tweet_count) {
@@ -40,5 +41,6 @@ function stopRandomTweetTask() {
     error_log("Command: $command");
     return ["status" => "success", "message" => "Random tweet generation stopped."];
 }
+    */
 ?>
 

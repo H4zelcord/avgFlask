@@ -1,5 +1,6 @@
-from python.bot import create_twitter_client, create_cohere_client, schedule_tweets
-from python.generate_tweet import main as generate_tweet
+"""""
+from bot import create_twitter_client, create_cohere_client, schedule_tweets
+from generate_tweet import main as generate_tweet
 import time
 import sys
 import random
@@ -9,10 +10,6 @@ def main():
     if len(sys.argv) >= 2:
         raise ValueError("Too many arguments provided. Usage: schedule_tweets.py")
     
-    """""
-    client = create_twitter_client()
-    co =     create_cohere_client()
-    """""
     theme_anime = ["Fullmetal Alchemist: Brotherhood", "Attack on Titan", "Death Note", "Cowboy Bebop",
                    "Steins;Gate", "Hunter x Hunter (2011)", "Neon Genesis Evangelion", "Code Geass: Lelouch of the Rebellion",
                    "Your Name", "Spirited Away", "One Piece", "Naruto: Shippuden", "Bleach", "Demon Slayer: Kimetsu no Yaiba",
@@ -110,13 +107,7 @@ def main():
 
     generate_tweet(theme, random_adjective)
 
-    """
-    post_tweet.main(prompt)
-    
-    time.sleep(interval_minutes * 60)  # Wait for the specified interval in minutes
-    
-    schedule_tweets(new_theme, interval_minutes)
-    
-    """
 if __name__ == "__main__":
     main()
+
+"""""

@@ -63,7 +63,11 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
                 </div>
             </div>
 
-            <!-- Generate Random Tweet Section -->
+
+            <!--
+
+            Generate Random Tweet Section
+            
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
@@ -82,18 +86,25 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
                 </div>
             </div>
 
+            -->
+
             <!-- Directly Prompt the AI Section -->
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">Directly Prompt the AI</h5>
+                        <?php if (isset($result) && $result['status'] === 'error'): ?>
+                            <div class="alert alert-danger">
+                                <?php echo $result['message']; ?>
+                            </div>
+                        <?php endif; ?>
                         <form method="POST" action="">
                             <input type="hidden" name="action" value="direct_prompt">
                             <div class="mb-3">
                                 <label for="ai_prompt" class="form-label">Enter your prompt:</label>
                                 <textarea id="ai_prompt" name="ai_prompt" class="form-control" rows="5" placeholder="Type your full prompt for the AI here..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Submit Prompt</button>
+                            <button type="submit" class="btn btn-primary w-100">Generate Response</button>
                         </form>
                     </div>
                 </div>
@@ -112,7 +123,7 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5>Generated Tweet</h5>
-                        <button class="close" onclick="closeModal()">×</button>
+                        <button class="close" onclick="window.location.href='index.php'">×</button> <!-- Redirect to clear $_POST -->
                     </div>
                     <div class="modal-body">
                         <p><?php echo htmlspecialchars($generated_tweet); ?></p>
@@ -123,7 +134,7 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
                             <input type="hidden" name="tweet_content" value="<?php echo htmlspecialchars($generated_tweet); ?>">
                             <button type="submit" class="btn btn-success">Post Tweet</button>
                         </form>
-                        <button class="btn btn-secondary" onclick="closeModal()">Go Back</button>
+                        <button class="btn btn-secondary" onclick="window.location.href='index.php'">Go Back</button> <!-- Redirect to clear $_POST -->
                     </div>
                 </div>
             </div>
@@ -135,8 +146,10 @@ require_once __DIR__ . '/../server_request.php'; // Include server_request.php
         </div>
     </div>
 
+    <!--
     <?php
         var_dump(json_encode($_POST))
     ?>
+    -->
 </body>
 </html>

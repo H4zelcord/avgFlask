@@ -3,7 +3,7 @@ import json
 import os
 
 try:
-    from python.bot import create_cohere_client, generate_ai_tweet
+    from bot import create_cohere_client, generate_ai_tweet
 except ImportError as e:
     error_result = {"status": "error", "message": f"Module import error: {e}"}
     print(json.dumps(error_result))
